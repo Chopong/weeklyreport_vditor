@@ -1,0 +1,17 @@
+flask==1.1.2
+flask_bootstrap
+flask_login
+flask_script
+flask_wtf
+Flask-Mail
+flask-admin
+gunicorn
+chartkick
+alembic
+flask_sqlalchemy
+flask-migrate==2.7.0
+flask_babelex
+psycopg2-binary
+python3-utils
+WTForms==2.3.3
+tablib

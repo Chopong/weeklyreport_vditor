@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+
+{% block page_content %}
+
+    <form class="form form-inline" method="GET" role="form">
+        {{ wtf.form_errors(form, hiddens="only") }}
+
+        <i class="fa fa-calendar-minus-o" aria-hidden="true"></i>{{ wtf.form_field(form.start_at) }}
+        <i class="fa fa-calendar-plus-o" aria-hidden="true"></i>{{ wtf.form_field(form.end_at) }}
+        <i class="fa fa-search" aria-hidden="true"></i>{{ wtf.form_field(form.submit) }}
+    </form>
+    <hr>
+
+
+    {% for report in pagination.items %}
+    <div class="post-preview">
+
+
+        <a rel="tag" class="post-tag">{{_('Employee')}}:{{ report.author.username }}</a>
+        <a rel="tag" class="post-tag">{{_('Department')}}:{{ report.department.name }}</a>
+        <a rel="tag" class="post-tag">{{_('Week Count')}}:{{ report.week_count }}</a>
+        <a rel="tag" class="post-tag">{{_('Year')}}:{{ report.year }}</a>
+		<a rel="tag" class="post-tag">{{_('Start')}}:{{ report.year | get_week_days(report.week_count,0) }}</a>
+		<a rel="tag" class="post-tag">{{_('End')}}:{{ report.year | get_week_days(report.week_count,1) }}</a>
+
+        <!-- <a rel="" class="post-export-tag">导出</a> -->
+
+        {% if report.is_of_current_week %}
+            <a href="{{url_for('report.write')}}" rel="tag" class="post-edit-tag">{{_('Edit')}}</a>
+        {% endif %}
+
+        {% if report.is_of_last_week %}
+            <a href="{{url_for('report.write_last_week')}}" rel="tag" class="post-edit-tag">{{_('Edit')}}</a>
+        {% endif %}
+
+        <div id="preview-target{{ loop.index }}"></div>
+        <div id="preview-md{{ loop.index }}" style="display: none;">{{report.content|safe}}</div>
+        <div>
+            <hr>
+        </div>
+    </div>
+    {% endfor %}
+
+    <ul class="pager">
+        {% if pagination.has_prev %}
+            <li class="previous"><a href="/my_report/{{pagination.page-1 }}">&larr; Newer </a></li>
+        {% else %}
+            <li class="previous disabled"><a href="#">&larr; Newer </a></li>
+        {% endif %}
+
+        {% if pagination.has_next %}
+            <li class="next"><a href="/my_report/{{pagination.page+1}}">Older &rarr;</a></li>
+        {% else %}
+            <li class="next disabled"><a href="#">Older &rarr;</a></li>
+        {% endif %}
+    </ul>
+
+{% endblock %}
+
+{% block script %}
+<link rel="stylesheet" href="{{ url_for('static', filename='vditor/dist/index.css') }}">
+<script type="text/javascript" src="{{ url_for('static', filename='vditor/dist/index.min.js') }}"></script>
+
+<script>
+    function createMDpreview(mdname, mdvalue){
+        let contentEditor = new Vditor(mdname, {
+            height: 300,
+            value: mdvalue,
+            icon: "material",
+            theme: 'classic',
+            preview: {
+                delay: 0,
+                hljs: {
+                    style: 'monokai',
+                    lineNumber: true
+                },
+                theme: {
+                    path: "{{ url_for('static', filename='vditor/dist/css/content-theme') }}"
+                },
+                actions: []
+            },
+            cache: {
+                enable: false
+            },
+            mode: 'wysiwyg', //'sv','ir', wysiwyg
+            cdn: "{{ url_for('static', filename='vditor') }}",
+            toolbar: [
+                'content-theme',
+                'code-theme',
+                'fullscreen',
+                'export',
+                'outline',
+                'preview'
+            ],
+            after (){
+                var evt = document.createEvent('Event');
+                evt.initEvent('click', true, true);
+                contentEditor.vditor.toolbar.elements.preview.firstElementChild.dispatchEvent(evt);
+                contentEditor.vditor.toolbar.elements.preview.setAttribute('style','display:none;');
+            }
+        });
+    };
+
+    $(function() {
+        eviewidxnum = "{{pagination.items|length }}";
+        for(i=1;i<Number(eviewidxnum)+1;i++){
+            var previewmd = document.getElementById('preview-md'+i).textContent;
+            // var previewtarget = document.getElementById('preview-target'+i);
+            // Vditor.preview(previewtarget,previewmd)
+            createMDpreview('preview-target'+i, previewmd);       
+        };
+    });
+</script>
+
+{% endblock %}

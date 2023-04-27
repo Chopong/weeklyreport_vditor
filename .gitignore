@@ -1,0 +1,11 @@
+.idea/
+mongo_data/
+pg96_data/
+*.log
+mongo/
+*.sqlite
+upload/
+wr_prd.sqlite
+*.pyc
+.DS_store
+.DS_store/
