@@ -38,7 +38,7 @@ docker run -d \
         -v db_port:5432 \
         -v db_user:postgres \
         -v db_pass:postgres \
-        chopong/weeklyreport:veditor
+        chopong/weeklyreport:vditor
 ```
 
 Or docker compose:
@@ -59,7 +59,7 @@ services:
       - $PWD/deploy/postgres:/var/lib/postgresql/data
       
   weekly-server:
-    image: chopong/weeklyreport:veditor
+    image: chopong/weeklyreport:vditor
     container_name: weeklyreport-server
     restart: unless-stopped
     volumes:
