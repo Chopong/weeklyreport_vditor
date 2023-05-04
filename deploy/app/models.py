@@ -26,7 +26,7 @@ class Role(db.Model):
     @staticmethod
     def insert_roles():
         roles = {
-            'QUIT': Permission.DO_NOTHING,
+            'ALUMNI': Permission.DO_NOTHING,
             'STUDENT': Permission.WRITE_REPORT,
             'MANAGER': (Permission.WRITE_REPORT |
                         Permission.READ_DEPARTMENT_REPORT |
