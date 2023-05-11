@@ -12,7 +12,7 @@
     请注意填写周报的日期
 </div>
 <h3>第{{ week_count }}周({{start_at}}至{{end_at}})工作周报</h3>
-<form class="form form-inline" method="post" role="form">
+<form id='vditorform' class="form form-inline" method="post" role="form">
     {{ form.csrf_token }}
     {{ form.hidden_tag() }}
     {{ wtf.form_errors(form, hiddens="only") }}
@@ -150,9 +150,22 @@
     // document.getElementById('vditor').oninput = function () {
     //     document.getElementById('vditortext').textContent = window.contentEditor.getValue();
     //     }
-    function time(){
-        document.getElementById('vditortext').textContent = window.contentEditor.getValue();
-        } setInterval("time()",5000);
+    
+    // function time(){
+    //     document.getElementById('vditortext').textContent = window.contentEditor.getValue();
+    //     } setInterval("time()",5000);
+    
+    document.getElementById('vditorform').onsubmit = function(){
+                document.getElementById('vditortext').textContent = window.contentEditor.getValue();
+                // document.getElementById('vditorform').submit();
+        }
+    // $(function(){
+    //     $("form").submit(
+    //         function(){
+    //             document.getElementById('vditortext').textContent = window.contentEditor.getValue();
+    //             document.getElementById('vditorform').submit();
+    //        })
+    // });
 </script>
 
 
