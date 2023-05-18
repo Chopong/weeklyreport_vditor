@@ -90,13 +90,16 @@ def write_last_week():
 
     if form.submit.data and form.validate_on_submit():
         if report:
-            report.content = form.body.data.replace('<br>', '')
+            # report.content = form.body.data.replace('<br>', '')
             # report.content = form.bodycontent.data.replace('<br>', '')
-            report.last_content = form.last_content.data.replace('<br>', '')
+            report.content = form.body.data
+            # report.last_content = form.last_content.data.replace('<br>', '')
+            report.last_content = form.last_content.data
         else:
             report = Report(
-                content=form.body.data.replace('<br>', ''),
+                # content=form.body.data.replace('<br>', ''),
                 # content=form.bodycontent.data.replace('<br>', ''),
+                content=form.body.data,
                 author_id=current_user.id,
                 week_count=get_week_count(get_last_week()),
                 year=get_last_week().year)
@@ -113,8 +116,8 @@ def write_last_week():
         form.body.data = report.content
         # form.bodycontent.data = report.content
     else:
-        form.body.data = current_app.config['DEFAULT_CONTENT']
         # form.bodycontent.data = current_app.config['DEFAULT_CONTENT']
+        form.body.data = current_app.config['DEFAULT_CONTENT']
         
     if last_report:
         form.last_content.data = last_report.content

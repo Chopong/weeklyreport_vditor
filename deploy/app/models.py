@@ -128,8 +128,8 @@ class User(db.Model, UserMixin):
         return self.role.name == 'ADMINISTRATOR' or self.is_super_admin
 
     @property
-    def is_hr(self):
-        return self.role is not None and self.role.name == 'PROF'
+    def is_professor(self):
+        return self.role is not None and self.role.name == 'PROFESSOR'
 
     @property
     def is_manager(self):

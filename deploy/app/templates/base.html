@@ -56,9 +56,9 @@
                             </a></li>
                         {% endif %}
 
-                        {% if current_user.is_hr or current_user.is_admin%}
+                        {% if current_user.is_professor or current_user.is_admin%}
                             <li><a href="{{url_for('report.read_crew')}}">
-                                <i class="fa fa-newspaper-o" aria-hidden="true"></i>{{_('Employee')}}
+                                <i class="fa fa-newspaper-o" aria-hidden="true"></i>{{_('Student')}}
                             </a></li>
 
                             <li><a href="{{url_for('report.statistics_crew')}}">

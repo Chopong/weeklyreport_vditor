@@ -21,6 +21,7 @@
     <div id="lastvditortext">
         {{ last_content_display|safe }}
     </div>
+    
     <div style="display: none">
         {{ form.body(id='vditortext') }}
     </div>
@@ -30,13 +31,13 @@
     {{ form.last_content }}
 
     <hr style="height:10pt; visibility:hidden;" />
-
-    {{ wtf.form_field(form.submit) }}
+    <!--这里如果用这个会造成表单提交两次，而且第二次是get会刷新页面, 通过e.preventDefault()禁用-->
+    <!-- onClick="submitmyweekly()",  -->
+    {{ wtf.form_field(form.submit, id="submitbutton") }}
+    <!-- <input class="btn btn-default" id="submitbutton" name="submit" type="submit" value="提交"> -->
 </form>
 
 {% endblock %}
-
-
 
 {% block script %}
 
@@ -155,10 +156,11 @@
     //     document.getElementById('vditortext').textContent = window.contentEditor.getValue();
     //     } setInterval("time()",5000);
     
-    document.getElementById('vditorform').onsubmit = function(){
-                document.getElementById('vditortext').textContent = window.contentEditor.getValue();
-                // document.getElementById('vditorform').submit();
-        }
+    // document.getElementById('vditorform').onsubmit = function(){
+    //             // document.getElementById('vditortext').textContent = window.contentEditor.getValue();
+    //             // document.getElementById('vditorform').submit();
+    //     }
+
     // $(function(){
     //     $("form").submit(
     //         function(){
@@ -166,6 +168,85 @@
     //             document.getElementById('vditorform').submit();
     //        })
     // });
+
+    document.getElementById('submitbutton').addEventListener("click", function(e){
+        e.preventDefault();
+        var formdata = {
+            "csrf_token": $('#vditorform')[0][0].value,
+            "last_content": $('#vditorform')[0][1].value,
+            "body": window.contentEditor.getValue(),
+            "submit": "提交"
+        };
+        $.ajax({
+            //几个参数需要注意一下
+                type: "POST",//方法类型
+                url: "/report/write/" ,//url
+                data: formdata,
+                // data: $('#vditorform').serialize() + "&submit='提交'",
+                success: function (result) {
+                    // console.log(result);//打印服务端返回的数据(调试用)
+                    if (result.resultCode == 200) {
+                        alert("SUCCESS");
+                    };
+                    if (result.resultCode == 302){
+                        alert("OK")
+                    };
+                    window.location.replace('/report/read')
+                },
+                error : function() {
+                    alert("异常！");
+                }
+            });
+    })
+
+    // $(function () {
+    //     //  1.监听表单的提交事件 
+    //     $('#vditorform').on('submit', function (e) {
+    //         // 2.阻止表单的默认行为
+    //         e.preventDefault();
+    //         // // document.getElementById('vditortext').textContent = window.contentEditor.getValue();
+    //         // // var formdata = $('#vditorform').serialize();
+    //         var formdata = {
+    //             "csrf_token": [$('#vditorform')[0][0].value,$('#vditorform')[0][0].value],
+    //             "last_content": [$('#vditorform')[0][1].value,$('#vditorform')[0][1].value],
+    //             "body": $('#vditorform')[0][4].value,
+    //             "submit": "提交"
+    //         }
+    //         // // 3. 快速获取表单中的数据
+    //         // // 调用的结果：
+    //         // // username=用户名的值&password=密码的值
+    //         // //因为函数返回结果会用表单元素的name属性来表示，
+    //         // //所以使用serialize()快速获取表单数据时需要为每个表单元素设置name属性且不重复
+    //         console.log(formdata.serialize())
+
+    //         // // 4.使用$.ajax()发起POST请求
+    //         // console.log(JSON.stringify(formdata));
+    //         $.ajax({                              
+    //             type: 'POST',                       //请求方式
+    //             url : '/report/write/',  //请求的URL地址
+    //             data: JSON.parse(JSON.stringify(formdata)),
+    //             success: function(res) {            //请求成功后的回调函数
+    //                 console.log(res);
+    //             }
+    //         })
+    //     })
+    // })
+
+    // const [formValues, setValues] = useState({});
+    // const handleSubmit = (values) => {
+    //     fetch(values).then((res) => {
+    //         sessionStorage.setItem('saveKey', values);
+    //     });
+    //     useEffect(() => {
+    //         const lastFormInfo = sessionStorage.getItem('saveKey');
+    //         if (lastFormInfo) {
+    //             setValues(lastFormInfo);
+    //         }
+    //     }, []);
+    //     return (
+    //         "<Form onChange={setValues} value={formValues}><FormItem><Submit loading={loading} onClick={handleSubmit}></Submit></FormItem></Form>"
+    //         )
+    //     }
 </script>
 
 

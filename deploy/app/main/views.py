@@ -152,7 +152,7 @@ class DepartmentAdminView(WeeklyReportModelView):
 class ReportAdminView(WeeklyReportModelView):
     column_labels = dict(year=u'年份', week_count=u'周次',
                          created_at=u'创建时间', last_content=u'上周计划', content=u'内容',
-                         author=u'员工', department=u'部门')
+                         author=u'成员', department=u'部门')
     column_list = ('author', 'department', 'year', 'week_count', 'last_content',
                    'content', 'created_at')
     column_default_sort = ('created_at', True)
@@ -215,7 +215,7 @@ class ReportAdminView(WeeklyReportModelView):
     column_formatters_export = EXPORT_REPORT_FORMATTERS
 
 
-admin.add_view(UserAdminView(User, db.session, name='用户'))
+admin.add_view(UserAdminView(User, db.session, name='成员'))
 admin.add_view(RoleAdminView(Role, db.session, name='角色'))
 admin.add_view(ReportAdminView(
     Report, db.session, name='周报', endpoint="reports"))
