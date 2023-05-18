@@ -261,12 +261,10 @@
                 mode: 'wysiwyg', //'sv','ir', wysiwyg
                 cdn: "{{ url_for('static', filename='vditor') }}",
                 toolbar: [
-                    'content-theme',
-                    'code-theme',
-                    'fullscreen',
-                    'export',
-                    'outline',
-                    'preview'
+                'outline',
+                'fullscreen',
+                'export',
+                'preview'
                 ],
                 after (){
                     let evt = document.createEvent('Event');

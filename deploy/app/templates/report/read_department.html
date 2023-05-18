@@ -23,7 +23,12 @@
         <a rel="tag" class="post-tag">{{_('Week Count')}}:{{ report.week_count }}</a>
         <a rel="tag" class="post-tag">{{_('Year')}}:{{ report.year }}</a>
 
-        {{report.content|safe}}
+        <div id="preview-currtarget{{ loop.index }}"></div>
+        <div id="preview-currmd{{ loop.index }}" style="display: none;">{{report.content|safe}}</div>
+        <div>
+            <hr>
+        </div>
+
         <hr>
     </div>
     {% endfor %}
@@ -63,8 +68,56 @@
 
 {% block script %}
 
+<link rel="stylesheet" href="{{ url_for('static', filename='vditor/dist/index.css') }}">
+<script type="text/javascript" src="{{ url_for('static', filename='vditor/dist/index.min.js') }}"></script>
 <script>
+    function createMDpreview(mdname, mdvalue){
+        let contentEditor = new Vditor(mdname, {
+            height: 300,
+            // width: 500,
+            value: mdvalue,
+            icon: "material",
+            theme: 'classic',
+            preview: {
+                delay: 0,
+                hljs: {
+                    style: 'monokai',
+                    lineNumber: true
+                },
+                theme: {
+                    path: "{{ url_for('static', filename='vditor/dist/css/content-theme') }}"
+                },
+                actions: []
+            },
+            cache: {
+                enable: false
+            },
+            mode: 'wysiwyg', //'sv','ir', wysiwyg
+            cdn: "{{ url_for('static', filename='vditor') }}",
+            toolbar: [
+                'outline',
+                'fullscreen',
+                'export',
+                'preview'
+            ],
+            after (){
+                let evt = document.createEvent('Event');
+                evt.initEvent('click', true, true);
+                contentEditor.vditor.toolbar.elements.preview.firstElementChild.dispatchEvent(evt);
+                contentEditor.vditor.toolbar.elements.preview.setAttribute('style','display:none;');
+            }
+        });
+    };
 
+    $(function() {
+        eviewidxnum = "{{pagination.items|length }}";
+        for(i=1;i<Number(eviewidxnum)+1;i++){
+            // let lastpreviewmd = document.getElementById('preview-lastmd'+i).textContent;
+            // createMDpreview('preview-lasttarget'+i, lastpreviewmd);
+            let currpreviewmd = document.getElementById('preview-currmd'+i).textContent;
+            createMDpreview('preview-currtarget'+i, currpreviewmd);
+        };
+    });
 </script>
 
 {% endblock %}

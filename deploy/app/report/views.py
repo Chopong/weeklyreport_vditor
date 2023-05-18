@@ -24,24 +24,32 @@ def write():
         week_count=get_week_count(),
         year=datetime.today().year
     ).first()
-    
+
     last_report = Report.query.filter_by(
         author_id=current_user.id,
         week_count=get_week_count() - 1,
         year=datetime.today().year
     ).first()
-    
+
     if form.submit.data and form.validate_on_submit():
         if report:
-            report.content = form.body.data.replace('<br>', '')
-            # report.content = form.bodycontent.data.replace('<br>', '')
-            report.last_content = form.last_content.data.replace('<br>', '')
+            # report.content = form.body.data.replace('<br>', '')
+            # Report.content = form.bodycontent.data.replace('<br>', '')
+            report.content = form.body.data
+
+            # report.last_content = form.last_content.data.replace('<br>', '')
+            report.last_content = form.last_content.data
+
             db.session.add(report)
         else:
             report = Report(
-                content=form.body.data.replace('<br>', ''),
+                # content=form.body.data.replace('<br>', ''),
                 # content=form.bodycontent.data.replace('<br>', ''),
-                last_content=form.last_content.data.replace('<br>', ''),
+                content=form.body.data
+
+                # last_content=form.last_content.data.replace('<br>', ''),
+                last_content=form.last_content.data
+
                 author_id=current_user.id,
                 week_count=get_week_count(),
                 year=datetime.today().year)
@@ -77,12 +85,12 @@ def write():
 def write_last_week():
     form = WriteForm()
     last_content_display = ""
-    
+
     report = Report.query.filter_by(
         author_id=current_user.id,
         week_count=get_week_count(get_last_week()),
         year=get_last_week().year).first()
-        
+
     last_report = Report.query.filter_by(
         author_id=current_user.id,
         week_count=get_week_count(get_last_week()) - 1,
@@ -93,6 +101,7 @@ def write_last_week():
             # report.content = form.body.data.replace('<br>', '')
             # report.content = form.bodycontent.data.replace('<br>', '')
             report.content = form.body.data
+            
             # report.last_content = form.last_content.data.replace('<br>', '')
             report.last_content = form.last_content.data
         else:
@@ -118,11 +127,11 @@ def write_last_week():
     else:
         # form.bodycontent.data = current_app.config['DEFAULT_CONTENT']
         form.body.data = current_app.config['DEFAULT_CONTENT']
-        
+
     if last_report:
         form.last_content.data = last_report.content
         last_content_display = get_last_week_content(last_report.content)
-                
+
     return render_template('report/write.html',
                            form=form,
                            week_count=get_week_count(get_last_week()),
@@ -156,7 +165,7 @@ def read(page_count=1):
             year=get_last_week().year).first():
         flash(Markup(_("Do you want to <a href='/report/write/last_week'>"
                        "edit last week's report?</a>")))
-        
+
     pagination = Report.query.filter_by().filter_by(author_id=current_user.id).filter_by().filter(
         Report.created_at.between(start_at, end_at)).order_by(
         Report.year.desc()).order_by(Report.week_count.desc()).paginate(
