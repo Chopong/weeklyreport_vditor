@@ -14,9 +14,13 @@
     {% block model_menu_bar %}
     <ul class="nav nav-tabs actions-nav">
         <li class="active">
-            <a href="javascript:void(0)">{{ _gettext('List') }}{% if count %} ({{ count }}){% endif %}</a>
+            <a href="javascript:void(0)">
+                {{ _gettext('List') }}
+                {% if count %}
+                 ({{ count }})
+                {% endif %}
+            </a>
         </li>
-
         {% if admin_view.can_create %}
         <li>
           {%- if admin_view.create_modal -%}

@@ -177,21 +177,22 @@
             "body": window.contentEditor.getValue(),
             "submit": "提交"
         };
+        pathnamereport = window.location.pathname == "/report/write/" ? "/report/write/" : "/report/write/last_week"
         $.ajax({
             //几个参数需要注意一下
                 type: "POST",//方法类型
-                url: "/report/write/" ,//url
+                url:  pathnamereport,//url
                 data: formdata,
                 // data: $('#vditorform').serialize() + "&submit='提交'",
                 success: function (result) {
                     // console.log(result);//打印服务端返回的数据(调试用)
-                    if (result.resultCode == 200) {
-                        alert("SUCCESS");
-                    };
-                    if (result.resultCode == 302){
-                        alert("OK")
-                    };
-                    window.location.replace('/report/read')
+                    // if (result.resultCode == 200) {
+                    //     alert("SUCCESS");
+                    // };
+                    // if (result.resultCode == 302){
+                    //     alert("OK")
+                    // };
+                    window.location.replace('/report/submit_success')
                 },
                 error : function() {
                     alert("异常！");

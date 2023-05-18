@@ -26,7 +26,8 @@ WR_MAIL_SUBJECT_PREFIX = '[WeeklyReport]'
 WR_MAIL_SENDER       = os.getenv('mail_sender',default='weeklyreport <weeklyreport@163.com>')
 DEPARTMENTS          = os.getenv('department', default='技术部,销售部').split(",")
 
-DEFAULT_CONTENT      = os.getenv('default_content', default="# 周报\n\n## 一、上周计划完成情况:\n\n- [x] DONE `Ctrl+J`\n\n## 二、计划外工作:\n\n## 三、重要问题:\n\n## 四、个人小结:\n\n## 五、下周计划:\n\n- [ ] TODO `Ctrl+Shift+J`\n\n")
+DEFAULT_TITLE        = os.getenv('default_title', default="")
+DEFAULT_CONTENT      = os.getenv('default_content', default="## 一、上周计划完成情况:\n\n- [x] DONE `Ctrl+J`\n\n## 二、计划外工作:\n\n## 三、重要问题:\n\n## 四、个人小结:\n\n## 五、下周计划:\n\n- [ ] TODO `Ctrl+Shift+J`\n\n")
 
 DB_NAME = os.getenv("db_name", default='weeklyreport')
 DB_USER = os.getenv("db_user", default='postgres')

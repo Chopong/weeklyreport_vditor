@@ -13,7 +13,6 @@ from ..models import Permission, User, Report, Department
 from ..utils import get_week_count, permission_required, get_this_monday, \
     get_last_week, get_last_week_start_at, get_last_week_end_at, get_last_week_content
 
-
 @report.route('/write/', methods=['GET', 'POST'])
 @permission_required(Permission.WRITE_REPORT)
 def write():
@@ -36,7 +35,6 @@ def write():
             # report.content = form.body.data.replace('<br>', '')
             # Report.content = form.bodycontent.data.replace('<br>', '')
             report.content = form.body.data
-
             # report.last_content = form.last_content.data.replace('<br>', '')
             report.last_content = form.last_content.data
 
@@ -45,11 +43,9 @@ def write():
             report = Report(
                 # content=form.body.data.replace('<br>', ''),
                 # content=form.bodycontent.data.replace('<br>', ''),
-                content=form.body.data
-
+                content=form.body.data,
                 # last_content=form.last_content.data.replace('<br>', ''),
-                last_content=form.last_content.data
-
+                last_content=form.last_content.data,
                 author_id=current_user.id,
                 week_count=get_week_count(),
                 year=datetime.today().year)
@@ -66,8 +62,18 @@ def write():
         form.body.data = report.content
         # form.bodycontent.data = report.content
     else:
-        form.body.data = current_app.config['DEFAULT_CONTENT']
         # form.bodycontent.data = current_app.config['DEFAULT_CONTENT']
+        datetitle = "# {:d}年第{:d}周 周报\n > 起: `{}` -- 止: `{}` \n `{}` 创建于: {}\n".format(datetime.today().year,
+                                                                                    get_week_count(),
+                                                                                    get_this_monday(),
+                                                                                    get_this_monday()+timedelta(days=6),
+                                                                                    current_user.username,
+                                                                                    datetime.strftime(datetime.today(), "%Y-%m-%d %T"))
+        if current_app.config["DEFAULT_TITLE"] == "":
+            form.body.data = datetitle + current_app.config['DEFAULT_CONTENT']
+        else:
+            form.body.data = current_app.config["DEFAULT_TITLE"] + current_app.config['DEFAULT_CONTENT']
+
     if last_report:
         form.last_content.data = last_report.content
         last_content_display = get_last_week_content(last_report.content)
@@ -78,7 +84,6 @@ def write():
                            start_at=get_this_monday(),
                            end_at=get_this_monday()+timedelta(days=6),
                            last_content_display=last_content_display)
-
 
 @report.route('/write/last_week', methods=['GET', 'POST'])
 @permission_required(Permission.WRITE_REPORT)
@@ -126,7 +131,16 @@ def write_last_week():
         # form.bodycontent.data = report.content
     else:
         # form.bodycontent.data = current_app.config['DEFAULT_CONTENT']
-        form.body.data = current_app.config['DEFAULT_CONTENT']
+        datetitle = "# {:d}年第{:d}周 周报\n > 起: `{}` -- 止: `{}` \n `{}` 创建于: {}\n".format(get_last_week().year,
+                                                                                      get_week_count(get_last_week()),
+                                                                                      get_last_week_start_at(),
+                                                                                      get_last_week_end_at() - timedelta(days=1),
+                                                                                      current_user.username,
+                                                                                      datetime.strftime(datetime.today(), "%Y-%m-%d %T"))
+        if current_app.config["DEFAULT_TITLE"] == "":
+            form.body.data = datetitle + current_app.config['DEFAULT_CONTENT']
+        else:
+            form.body.data = current_app.config["DEFAULT_TITLE"] + current_app.config['DEFAULT_CONTENT']
 
     if last_report:
         form.last_content.data = last_report.content
@@ -139,6 +153,10 @@ def write_last_week():
                            end_at=get_last_week_end_at() - timedelta(days=1),
                            last_content_display=last_content_display)
 
+@report.route('/submit_success', methods=['GET'])
+@permission_required(Permission.WRITE_REPORT)
+def submit_success():
+    return render_template("report/submit_success.html")
 
 @report.route('/read/', methods=['GET'])
 @report.route('/read/<int:page_count>', methods=['GET'])

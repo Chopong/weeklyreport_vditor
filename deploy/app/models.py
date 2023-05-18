@@ -31,7 +31,7 @@ class Role(db.Model):
             'MANAGER': (Permission.WRITE_REPORT |
                         Permission.READ_DEPARTMENT_REPORT |
                         Permission.ENTER_ADMIN),
-            'PROF': (Permission.WRITE_REPORT |
+            'PROFESSOR': (Permission.WRITE_REPORT |
                    Permission.READ_DEPARTMENT_REPORT |
                    Permission.READ_ALL_REPORT),
             'ADMINISTRATOR': 0xff,
