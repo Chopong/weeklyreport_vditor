@@ -15,7 +15,7 @@
     <div class="panel panel-default">
         <div class="panel-heading">
             <i class="fa fa-bar-chart aria-hidden=true"></i>
-            第{{ week_count }}周 ({{start_at}}至{{end_at}}) 各部门未交周报人数统计
+            第{{ week_count }}周 ({{start_at}}至{{end_at}}) 未交周报人数统计
             {% if get_this_week_count() == week_count %}
                 <a href="{{url_for('report.statistics_crew_last_week')}}">
                     (查看上周)
