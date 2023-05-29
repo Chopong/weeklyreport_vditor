@@ -817,7 +817,7 @@
 .vditor-reset ol {
   padding-left: 2em;
   margin-top: 0;
-  margin-bottom: 16px;
+  margin-bottom: 10px;
 }
 .vditor-reset li + li {
   margin-top: 0.25em;
@@ -1034,7 +1034,7 @@
 .vditor-reset ul:last-child,
 .vditor-reset ol:last-child,
 .vditor-reset hr:last-child {
-  margin-bottom: 0;
+  margin-bottom: 1rem;
 }
 .vditor-comment {
   border-bottom: 2px solid #f8e6ab;
